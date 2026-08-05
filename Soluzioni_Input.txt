@@ -1,0 +1,13 @@
+
+	SOLUZIONI:
+
+Input_01 	0 1 2 3
+Input_02	0 1
+Input_03	0
+Input_04	Non esiste una soluzione
+Input_05	0 1 2 3 4
+Input_06	0 3 1 4 2 5
+Input_07	0 1 2 3 4 5
+Input_08	Non esiste una soluzione
+Input_09	0 1 2 3
+Input_10	3 2 1 0
