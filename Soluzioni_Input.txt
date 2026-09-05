@@ -11,3 +11,5 @@ Input_07	0 1 2 3 4 5
 Input_08	Non esiste una soluzione
 Input_09	0 1 2 3
 Input_10	3 2 1 0
+Input_11	0 1 2 3
+Input_12	Non sono previsti esami da sostenere

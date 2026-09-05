@@ -8,20 +8,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 
 #include "Grafi.h"
 #include "Code_Di_Interi.h"
 
 
-#define ROW_LENGTH 256
+
 
 
 
     /* Dichiarazione procedure secondarie del codice */
 
-void Interpreta_Linea_Di_Comando(int argc, char *argv[], char* file_dati);
+char* Interpreta_Linea_Di_Comando(int argc, char *argv[]);
 
 void Gestisce_Input(char *file_dati, int *numero_corsi, int *dimensione_prerequisiti, int ***pprerequisiti);
 
@@ -31,7 +30,7 @@ void Calcola_Numero_Di_Prerequisiti_Per_Ciascun_Corso(int *numero_di_prerequisit
 
 void Calcola_Ordine_Esami(grafo *pG, int *numero_di_prerequisiti, int *soluzione, bool *esiste_soluzione);
 
-void Calcola_Dimensione_Soluzione(bool esiste_soluzione, int **soluzione, int *dimensione_soluzione, int numero_corsi);
+void Calcola_Dimensione_Soluzione(bool esiste_soluzione, int *dimensione_soluzione, int numero_corsi);
 
 void Stampa_Soluzione(int *soluzione, int dimensione_soluzione);
 
@@ -48,13 +47,14 @@ int main(int argc, char* argv[]) {
 
     /* Prima parte Dichiarativa e prime inizializzazioni */
 
-    char file_dati[ROW_LENGTH];
+    char* file_dati;
 
     int numero_corsi;
     int dimensione_prerequisiti;
     int** prerequisiti;
+    /* prerequisti si può pensarla come una matrice m x 2, dove m è il numero di archi, oppure come un puntatore ad una costola di puntatori a vettori di int */
 
-    Interpreta_Linea_Di_Comando(argc, argv, file_dati);
+    file_dati = Interpreta_Linea_Di_Comando(argc, argv);
 
     Gestisce_Input(file_dati, &numero_corsi, &dimensione_prerequisiti, &prerequisiti);
 
@@ -67,6 +67,12 @@ int main(int argc, char* argv[]) {
 
     int *soluzione;
     soluzione = (int *) malloc(numero_corsi*sizeof(int));
+    if(soluzione==NULL){
+        fprintf(stderr,"Memoria insufficiente per allocare il vettore soluzione!\n");
+        exit(EXIT_FAILURE);
+    }
+
+
     int dimensione_soluzione;
 
     bool esiste_soluzione;
@@ -79,7 +85,7 @@ int main(int argc, char* argv[]) {
 
     /* Cuore del codice: */
     Calcola_Ordine_Esami(pG, numero_di_prerequisiti, soluzione, &esiste_soluzione);
-    Calcola_Dimensione_Soluzione(esiste_soluzione, &soluzione, &dimensione_soluzione, numero_corsi);
+    Calcola_Dimensione_Soluzione(esiste_soluzione, &dimensione_soluzione, numero_corsi);
 
 
     /* Stampa risultato finale */
@@ -89,8 +95,11 @@ int main(int argc, char* argv[]) {
     /* Dealloca le strutture dati utilizzate */
     DeallocaGrafo(pG);
     Dealloca_Prerequisiti(&prerequisiti, dimensione_prerequisiti);
+    
+    free(soluzione);  
+    soluzione = NULL;
 
-
+    
     return EXIT_SUCCESS;
     
 } // end main
@@ -106,14 +115,16 @@ int main(int argc, char* argv[]) {
 
 
 
-void Interpreta_Linea_Di_Comando(int argc, char *argv[], char* file_dati){
+char* Interpreta_Linea_Di_Comando(int argc, char *argv[]){
+
 
     if(argc != 2){
         fprintf(stderr,"Errore nella linea di comando!\n");
         exit(EXIT_FAILURE);
     }
 
-    strcpy(file_dati, argv[1]);
+
+    return(argv[1]);
 
 }
 
@@ -137,7 +148,13 @@ void Gestisce_Input(char *file_dati, int *numero_corsi, int *dimensione_prerequi
     fscanf(fp, "%d", numero_corsi);
     fscanf(fp, "\n");
 
-    /* Leggo una prima volta il file e ricavo quanti prerequisiti ho in mano */
+    if(*numero_corsi <= 0){
+        fprintf(stderr, "Errore, non sono previsti esami da sostenere!\n");
+        exit(EXIT_FAILURE);
+    }
+    
+
+    /* Leggo una prima volta il file e ricavo quanti prerequisiti totali ho in mano (il numero di archi m del grafo) */
     k=0;
     while( fscanf(fp, "[%d, %d]", &a_k, &b_k) == 2){
         k++;
@@ -145,10 +162,22 @@ void Gestisce_Input(char *file_dati, int *numero_corsi, int *dimensione_prerequi
     }
     *dimensione_prerequisiti=k;
 
-    *pprerequisiti = (int **) malloc( *dimensione_prerequisiti * sizeof(int *) );
-    if(*pprerequisiti == NULL){
-        fprintf(stderr, "Errore nell'allocazione della costola del vettore prerequisiti\n");
-        exit(EXIT_FAILURE);
+    if(*dimensione_prerequisiti>0){
+        *pprerequisiti = (int **) malloc( *dimensione_prerequisiti * sizeof(int *) );
+        if(*pprerequisiti == NULL){
+            fprintf(stderr, "Errore nell'allocazione della costola del vettore prerequisiti\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else{           /* Se ci sono solo esami senza prerequisiti, puoi sostenere l'esame nell'ordine che vuoi, ad esempio: 0,1,2,...,n */
+        int j;
+        for(j=0; j < *numero_corsi; j++){
+            printf("%d ",j);
+        }
+        printf("\n\n");
+        
+        fclose(fp);
+        exit(EXIT_SUCCESS);
     }
 
 
@@ -282,16 +311,13 @@ void Calcola_Ordine_Esami(grafo *pG, int *numero_di_prerequisiti, int *soluzione
 
 
 
-void Calcola_Dimensione_Soluzione(bool esiste_soluzione, int **soluzione, int *dimensione_soluzione, int numero_corsi){
+void Calcola_Dimensione_Soluzione(bool esiste_soluzione, int *dimensione_soluzione, int numero_corsi){
 
     if(esiste_soluzione==true)
         *dimensione_soluzione = numero_corsi;
     
-    else {
+    else 
         *dimensione_soluzione = 0;
-        free(*soluzione);
-        *soluzione=NULL;
-    }
 
 }
 
