@@ -8,36 +8,45 @@ prerequisito per il corso $w$.
 L'input, ovverosia il numero di esami ed il modo in cui essi si intrecciano sotto forma di rispettivi prerequisiti saranno presi da un file di testo formattato, 
 modificabile anche da un utente.
 
-## 1. Il Problema
-Il problema richiede di trovare un ordine in cui sostenere una serie di esami universitari, garantendo che nessun esame venga affrontato prima di aver 
-superato tutti i suoi prerequisiti. Il problema è stato modellizzato mediante un grafo.  
-In tale grafo i nodi saranno gestiti con numeri anziché con stringhe, per non appesantire la ricerca e le varie azioni sul grafo, si creerà quindi una biezione tra 
-gli N esami universitari ed {0, 1, ..., N-1} $\subseteq$ ℕ.  
-Si consideri il seguente esempio:  
-- algebra lineare 1 (prerequisito per analisi 2 e per algebra lineare 2)  
-- algebra lineare 2  
-- analisi 1 (prerequisito per analisi 2)  
-- analisi 2 (prerequisito per analisi 3)  
-- analisi 3 (prerequisito per analisi 4)  
-- algebra astratta 1 (prerequisito per topologia)  
-- topologia (prerequisito per analisi 4)  
-- analisi 4 (prerequisito per probabilità)  
-- probabilità (prerequisito per statistica)
-- statistica
 
-Agli esami sarà assegnato un intero progressivo e sfruttando tale intero si maneggerà il grafo. Utilizzando ad esempio l'intero progressivo di lettura,
-nell'esempio di cui sopra si avrà:  
-&nbsp; &nbsp; &nbsp; 0 $\longleftrightarrow$ algebra lineare 1  
+
+## Formato di input
+
+Il programma legge i dati da un file di testo, come ad esempio [Input_01.txt](Input_01.txt). Il file deve essere strutturato nel seguente modo:  
+La prima riga contiene un intero $N$, che rappresenta il numero totale dei corsi universitari da seguire. La seconda riga contiene una sequenza di coppie di interi nel formato [corso, prerequisito] separate da virgola.  
+Esempio di input:  
+```
+4  
+[1,0], [2,0], [3,1], [3,2]
+```
+In questo esempio ci sono 4 corsi (numerati da 0 a 3). L'esame 0 è propedeutico sia per il corso 1 che per il corso 2. Gli esami 1 e 2 sono 
+prerequisito per il 3.  
+In questo caso una possibile soluzione sarà: &nbsp; "0 2 1 3"  
+
+Sono stati predisposti 12 diversi file input, numerati da 01 a 12. Nel file [Soluzioni_Input.txt](Soluzioni_Input.txt), creato solo per l'utente umano, sono contenute le soluzioni
+dei 12 file input già predisposti. Ovviamente l'utente potrà creare dei nuovi e diversi possibili file input, purché sia rispettato il formato di 
+scrittura di cui sopra.
+Se nessun corso ammette prerequisiti si può lasciare vuota la seconda riga (cfr. [Input_12.txt](Input_12.txt)) o inserire due parentesi quadre vuote [ ] per indicare una lista vuota (cfr. [Input_03.txt](Input_03.txt))
+
+## La modellizzazione del problema
+Il problema è stato modellizzato mediante un grafo. In tale grafo i nodi saranno gestiti con numeri anziché con stringhe, per non appesantire la 
+ricerca e le varie azioni sul grafo, si creerà quindi una biezione tra 
+gli N esami universitari ed {0, 1, ..., N-1} $\subseteq$ ℕ.  
+Si consideri il seguente esempio, dove a ciascun esame è assegnato anche un intero progressivo di lettura:    
+
+&nbsp; &nbsp; &nbsp; 0 $\longleftrightarrow$ algebra lineare 1 (prerequisito per analisi 2 e per algebra lineare 2)  
 &nbsp; &nbsp; &nbsp; 1 $\longleftrightarrow$ algebra lineare 2  
-&nbsp; &nbsp; &nbsp; 2 $\longleftrightarrow$ analisi 1  
-&nbsp; &nbsp; &nbsp; 3 $\longleftrightarrow$ analisi 2  
-&nbsp; &nbsp; &nbsp; 4 $\longleftrightarrow$ analisi 3  
-&nbsp; &nbsp; &nbsp; 5 $\longleftrightarrow$ algebra astratta 1  
-&nbsp; &nbsp; &nbsp; 6 $\longleftrightarrow$ topologia  
-&nbsp; &nbsp; &nbsp; 7 $\longleftrightarrow$ analisi 4  
-&nbsp; &nbsp; &nbsp; 8 $\longleftrightarrow$ probabilità  
+&nbsp; &nbsp; &nbsp; 2 $\longleftrightarrow$ analisi 1 (prerequisito per analisi 2)  
+&nbsp; &nbsp; &nbsp; 3 $\longleftrightarrow$ analisi 2 (prerequisito per analisi 3)  
+&nbsp; &nbsp; &nbsp; 4 $\longleftrightarrow$ analisi 3 (prerequisito per analisi 4)  
+&nbsp; &nbsp; &nbsp; 5 $\longleftrightarrow$ algebra astratta 1 (prerequisito per topologia)  
+&nbsp; &nbsp; &nbsp; 6 $\longleftrightarrow$ topologia (prerequisito per analisi 4)  
+&nbsp; &nbsp; &nbsp; 7 $\longleftrightarrow$ analisi 4 (prerequisito per probabilità)  
+&nbsp; &nbsp; &nbsp; 8 $\longleftrightarrow$ probabilità (prerequisito per statistica)  
 &nbsp; &nbsp; &nbsp; 9 $\longleftrightarrow$ statistica  
+
 ed il grafo associato sarà della forma:
+
 <img width="768" height="420" alt="image" src="https://github.com/user-attachments/assets/6f2ba970-5b6a-486a-bd74-cd2d3d241719" />
 
 Con tale input, una possibile soluzione può essere: &nbsp; "5 6 0 2 1 3 4 7 8 9",  
@@ -52,10 +61,10 @@ Si osservi poi che esistono input particolari tali per cui la soluzione sia unic
 Se il problema non ammette soluzione, l'algoritmo stamperà a video un appropriato messaggio di testo. Alternativamente, se l'input ammette soluzioni, l'algoritmo 
 stamperà a video una delle possibili soluzioni.  
 
-## 2. Strutture dati utilizzate e loro implementazione
+## Strutture dati utilizzate e loro implementazione
 Per risolvere il problema sono state utilizzate le linked list, i grafi, i vettori e le code di interi.
 
-Le liste sono state implementate come linked list cicliche bidirezionali con sentinella.  
+Le liste sono state implementate come linked list con puntatori, cicliche, bidirezionali, con sentinella.  
 Un nodo di questa lista è una struct contenete tre campi: l'elemento, il puntatore al nodo successivo ed il puntatore al nodo precedente.  
 La lista sarà un puntatore ad un nodo della lista stessa, e tale nodo sarà il cosiddetto "nodo sentinella", cioè un nodo fittizio, la sua presenza 
 è utile per capire se in un ciclo for o while sia stata scandita tutta la lista (in effetti, se il puntatore al nodo successivo del nodo in esame è uguale al puntatore lista, allora ho scorso tutta la lista ed il nodo in esame è l'ultimo della linked list).
@@ -90,47 +99,36 @@ Lo svantaggio è tuttavia che il costo computazionale necessario per accedere
 all'arco $(v,w)$ è pari a $\Theta( \delta_{v}^{+} )$, dove $\delta_{v}^{+}$ indica il numero di archi uscenti dal nodo $v$.
 
 Tra le altre strutture dati utilizzate ci sono anche i vettori e le code di interi.  
-La coda di interi (int queue) è una classica coda di priorità i cui elementi sono nodi contenenti solo numeri interi, ed è stata per semplicità implementata mediante un vettore e due interi come indici posizione (che fungono quindi da "puntatori") denominati front e rear.  
-La coda di interi rispetta la gerarchia FIFO (first in first out) tipica di tutte le code di priorità.
+La coda di interi (int queue) è una classica coda i cui elementi sono nodi che possono contenere solo numeri interi, ed è stata per semplicità implementata mediante un vettore e due interi come indici posizione (che fungono quindi da "puntatori") denominati front e rear.  
+La coda di interi rispetta la gerarchia FIFO (first in first out) tipica di tutte le code.
 
 Sono state implementate anche delle funzioni di libreria, consultabili nei file:  
-Liste_Archi.h, Liste_Archi.c, Grafi.h, Grafi.c, Code_Di_Interi.h ed Code_Di_Interi.c.
+[Liste_Archi.h](Liste_Archi.h), [Liste_Archi.c](Liste_Archi.c), [Grafi.h](Grafi.h), [Grafi.c](Grafi.c), 
+[Code_Di_Interi.h](Code_Di_Interi.h) ed [Code_Di_Interi.c](Code_Di_Interi.c).
 
 
-## 3. Formato di input
 
-Il programma legge i dati da un file di testo (es. Input_01.txt). Il file deve essere strutturato nel seguente modo:  
-La prima riga contiene un intero $N$, che rappresenta il numero totale dei corsi universitari da seguire. La seconda riga contiene una sequenza di coppie di interi nel formato [corso, prerequisito] separate da virgola.  
-Esempio di input:  
-
-4  
-[1,0], [2,0], [3,1], [3,2]
-
-In questo esempio ci sono 4 corsi (numerati da 0 a 3). L'esame 0 è propedeutico sia per il corso 1 che per il corso 2. Gli esami 1 e 2 sono 
-prerequisito per il 3.  
-In questo caso una possibile soluzione sarà: &nbsp; "0 2 1 3"  
-
-Sono stati predisposti 10 diversi file input, numerati da 01 a 10. Nel file "Soluzioni_Input.txt", creato solo per l'utente umano, sono contenute le soluzioni
-dei 10 file input già predisposti. Ovviamente l'utente potrà creare dei nuovi e diversi possibili file input, purché sia rispettato il formato di 
-scrittura di cui sopra.
-
-
-## 4. Algoritmo di risoluzione
+## Algoritmo di risoluzione
 
 Dopo aver letto l'input, interpretato il formato e caricato i dati in un grafo, l'algoritmo procede ad eseguire una prima lettura di tutto il grafo (andando ad eseguire un ciclo for sulla costola ed un ciclo annidato sulla lista FS, il tutto in tempo $\Theta(m)$, lineare nel numero di archi) e calcola per ciascun corso v quanti siano i suoi prerequisiti.  
-Per fare ciò si utilizza un vettore di interi chiamato "prerequisiti", esso è un vettore con la proprietà tale per cui prerequisiti[v] indica il numero di esami che è necessario sostenere prima di poter sostenere l'esame v.  
-L'inizializzazione del vettore prerequisiti avviene tramite la procedura descritta sopra: tramite un ciclo for sulla costola ed un ciclo for (annidato)
-sulle liste FS si accede a ciascuno degli m archi della forma (v,w), si memorizza la destinazione w dell'arco, e si incrementa prerequisiti[w] di 1.
+Per fare ciò si utilizza un vettore di interi chiamato `numero_di_prerequisiti`, esso è un vettore con la proprietà tale per cui `numero_di_prerequisiti[v]` indica il numero di esami che è necessario sostenere prima di poter sostenere l'esame v.  
+L'inizializzazione del vettore `numero_di_prerequisiti` avviene tramite un ciclo for sulla costola ed un ciclo for (annidato)
+sulle liste FS del nodo in esame, si accede pertanto a ciascuno degli $\delta_{v}^{+}$ archi della forma (v,w), si memorizza la destinazione w dell'arco, e si incrementa `numero_di_prerequisiti[w]` di 1.
 
-Si osservi che prerequisiti[w] = $\delta_{w}^{-}$, cioè il numero di archi entranti nel nodo $w$. Osservato ciò si potrebbe dedurre che per affrontare il problema sarebbe stato preferibile implementare il grafo con liste di archi entranti anziché con liste di archi uscenti (le forward star), in realtà non ci sarebbe nessun vantaggio in termini di costo computazionale perché comunque bisogna necessariamente accedere a ciascuno degli m archi (v,w), rendendo dunque il costo temporale comunque non inferiore a $\Theta(m)$, si è preferito quindi lasciare il grafo implementato con liste FS per non perdere una maggior leggibilità del codice.  
+Si osservi che `numero_di_prerequisiti[w]` = $\delta_{w}^{-}$, cioè il numero di archi entranti nel nodo $w$. Osservato ciò si potrebbe pensare che per affrontare il problema sarebbe stato preferibile implementare il grafo con liste di archi entranti anziché con liste di archi uscenti (le forward star), in realtà non ci sarebbe nessun vantaggio in termini di costo computazionale perché comunque bisogna necessariamente accedere a ciascuno degli m archi (v,w), rendendo dunque il costo temporale comunque non inferiore a $\Theta(m)$, si è preferito quindi lasciare il grafo implementato con liste FS per non perdere una maggior leggibilità del codice.  
 
-Sarà necessario definire anche un vettore soluzione, in cui progressivamente andremo ad inserire gli esami che man mano diventeranno sostenibili poiché si saranno sostenuti tutti i loro esami prerequisito.
+Viene poi definito anche un vettore `soluzione`, in cui progressivamente si andranno ad inserire gli esami che man mano diventeranno sostenibili poiché si saranno sostenuti tutti i loro esami prerequisito.
 
-Una volta inizializzato il vettore dei prerequisiti, il problema viene risolto con quella che essenzialmente è una visita in ampiezza (una BFS - breadth first search) con l'accortezza però che un nodo sarà utilizzato per visitare i nodi ad esso adiacenti solo quando saranno stati visitati anche tutti i suoi prerequisiti.  
-L'idea di fondo è la seguente: si inseriscono nel vettore soluzione ed anche in una coda di interi tutti e soli i nodi del grafo che abbiano zero prerequisiti (il criterio con cui li si inserisce in coda e nel vettore soluzione è uno dei tanti fattori che determinerà a quale delle possibili soluzioni l'algoritmo convergerà, noi comunque abbiamo optato per un semplice criterio di numerazione crescente, non essendo interessati ad una soluzione particolare), dopodiché, fintanto che la coda non è vuota si estrae dalla coda il nodo v in cima, tale elemento v viene dunque usato per visitare i nodi ad esso adiacenti, facendo scorrere la sua lista FS. Per ogni nodo w nella FS di v si decrementa prerequisiti[w] di uno, poiché un prerequisito di w, cioè v, è stato appena tolto ed utilizzato infatti per la visita del grafo; inoltre, se prerequisiti[w] è appena sceso a zero, si inserisce w nel vettore soluzione e si inserisce anche w nella coda.  
-Al termine del processo, la cardinalità del vettore soluzione ci dirà se ci sia effettivamente una soluzione (cosa che accade se e solo se il vettore soluzione ospita tutti gli n nodi del grafo) oppure se il grafo presenta un ciclo (e quindi non ci sia effettivamente una soluzione).
+Una volta inizializzato il vettore `numero_di_prerequisiti`, il problema viene risolto con quella che essenzialmente è una visita in ampiezza (una BFS - breadth first search) con l'accortezza però che un nodo sarà utilizzato per visitare i nodi ad esso adiacenti solo quando saranno stati visitati anche tutti i suoi prerequisiti.  
+L'idea di fondo è la seguente: si inseriscono nel vettore `soluzione` ed anche in una coda di interi `Q` tutti e soli i nodi del grafo che abbiano zero prerequisiti (il criterio con cui li si inserisce in coda e nel vettore soluzione è uno dei tanti fattori che determinerà a quale delle possibili soluzioni l'algoritmo convergerà, noi comunque abbiamo optato per un semplice criterio di numerazione crescente, non essendo interessati ad una soluzione particolare), dopodiché, fintanto che la coda `Q` non è vuota si estrae da `Q` il nodo v in cima, tale elemento v viene dunque usato per visitare i nodi ad esso adiacenti, facendo scorrere la sua lista FS. Per ogni nodo w nella FS di v si decrementa `numero_di_prerequisiti[w]` di 1, poiché un prerequisito di w, cioè v, è stato appena tolto ed utilizzato infatti per la visita del grafo; inoltre, se `numero_di_prerequisiti[w]` è appena sceso a 0, si inserisce w nel vettore `soluzione` e si inserisce anche w nella coda `q`.  
+Al termine del processo, la cardinalità del vettore `soluzione` ci dirà se ci sia effettivamente una soluzione (cosa che accade se e solo se il vettore `soluzione` ospita tutti gli n nodi del grafo) oppure se il grafo presenta un ciclo (e quindi non ci sia effettivamente una soluzione).  
 
-## 5. Costi computazionali
+La procedura appena descritta ha in realtà un nome ben preciso: trattasi dell'*algoritmo di Kahn* per *l'ordinamento topologico* di un grafo orientato. 
+Un ordinamento dei nodi di un grafo viene detto topologico quando l'ordinamento dei nodi rispetta la proprietà secondo la quale:  
+&nbsp; &nbsp; se esiste l'arco (v,w) allora il nodo v deve precedere il nodo w.
+
+
+## Analisi dei costi computazionali
 
 Analizzeremo qui solo i costi computazionali del calcolo della soluzione, non saranno analizzati i costi computazionali per l'interpretazione dell'input ed il caricamento dell'input in un grafo (cosa che comunque avviene con un costo computazionale lineare in n+m) e non analizzeremo i costi computazionali per deallocare le strutture dati allocate dinamicamente come ad esempio il grafo (cosa che, ancora una volta, avviene linearmente).  
 Sia $G:=(V,E)$ il grafo, con $n:=|V|, m:=|E|$.
@@ -138,22 +136,34 @@ Sia $G:=(V,E)$ il grafo, con $n:=|V|, m:=|E|$.
 Per inizializzare il vettore dei prerequisiti, avviene che, in pseudocodice:  
 
 &nbsp;         for k = 0, 1, ..., n-1  
+&nbsp; &nbsp; &nbsp;     numero_di_prerequisiti[ k ] = 0;
+
+
+&nbsp;         for k = 0, 1, ..., n-1  
 &nbsp; &nbsp; &nbsp;     for (k, j) $\in$ FS[k]  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   LeggiDestinazioneArco( (k, j) );  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   prerequisiti[ j ]++;  
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   numero_di_prerequisiti[ j ]++;  
 
 Il costo computazionale per fare ciò è pari ad:
 
 $$
-\sum_{k=0}^{n-1} \sum_{(k,j) \in FS[k]} \Theta(1) = 
-\sum_{k=0}^{n-1} \Theta(1) \sum_{(k,j) \in FS[k]} 1 =
-\sum_{k=0}^{n-1} \Theta(1) \cdot \delta_{k}^{+} =
-\sum_{k=0}^{n-1} \Theta(\delta_{k}^{+}) =
-\Theta \left( \sum_{k=0}^{n-1} \delta_{k}^{+} \right) =
-\Theta(m)
+\sum_{k=0}^{n-1} \Theta(1) + \sum_{k=0}^{n-1} \sum_{(k,j) \in FS[k]} \Theta(1) = 
+\Theta \left(\sum_{k=0}^{n-1} 1 \right) + \sum_{k=0}^{n-1} \Theta(1) \sum_{(k,j) \in FS[k]} 1 =
+\Theta(n) + \sum_{k=0}^{n-1} \Theta(1) \cdot \delta_{k}^{+} =
+$$ 
+
+$$
+= \Theta(n) + \sum_{k=0}^{n-1} \Theta(\delta_{k}^{+}) =
+\Theta(n) + \Theta \left( \sum_{k=0}^{n-1} \delta_{k}^{+} \right) =
+\Theta(n) + \Theta(m) = 
+\Theta(n+m)
 $$
 
+<br>
+<br>
 Per quanto riguarda la visita del grafo, lo pseudocodice è il seguente:  
+<br>
+<br>
 
 cont_soluz = 0;  
 coda Q;  
@@ -183,13 +193,19 @@ pertanto, il costo computazionale di questa seconda parte di codice è:
 $$
 \sum_{k=0}^{n-1} \Theta(1)  +  \sum_{k=0}^{n-1} \left( \Theta(1) + \sum_{(k,w) \in FS[k]} \Theta(1) \right) =
 \Theta \left( \sum_{k=0}^{n-1} 1 \right) + \sum_{k=0}^{n-1} \left( \Theta(1) + \Theta(\delta_{k}^{+}) \right) = 
-\Theta(n) + \sum_{k=0}^{n-1} \Theta(\delta_{k}^{+}) = 
+$$
+
+$$
+= \Theta(n) + \sum_{k=0}^{n-1} \Theta(\delta_{k}^{+}) = 
 \Theta(n) + \Theta(m) =
 \Theta(n+m)
 $$
 
-Di conseguenza, il costo computazionale totale per calcolare l'ordine degli esami da sostenere è pari ad
+<br>
+Di conseguenza, il costo computazionale totale per calcolare l'ordine degli esami da sostenere è pari ad  
+<br>
+<br>
 
 $$
-Time(Course \textunderscore Schedule) = \Theta(m) + \Theta(n+m) = \Theta(n+m)
+Time(Course \textunderscore Schedule) = \Theta(n+m) + \Theta(n+m) = \Theta(n+m)
 $$
