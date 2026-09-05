@@ -26,7 +26,7 @@ In questo caso una possibile soluzione sarà: &nbsp; "0 2 1 3"
 Sono stati predisposti 12 diversi file input, numerati da 01 a 12. Nel file [Soluzioni_Input.txt](Soluzioni_Input.txt), creato solo per l'utente umano, sono contenute le soluzioni
 dei 12 file input già predisposti. Ovviamente l'utente potrà creare dei nuovi e diversi possibili file input, purché sia rispettato il formato di 
 scrittura di cui sopra.
-Se nessun corso ammette prerequisiti si può lasciare vuota la seconda riga (cfr. [Input_12.txt](Input_12.txt)) o inserire due parentesi quadre vuote [ ] per indicare una lista vuota (cfr. [Input_03.txt](Input_03.txt))
+Se nessun corso ammette prerequisiti si può lasciare vuota la seconda riga (cfr. [Input_11.txt](Input_11.txt)) o inserire due parentesi quadre vuote [ ] per indicare una lista vuota (cfr. [Input_03.txt](Input_03.txt))
 
 ## La modellizzazione del problema
 Il problema è stato modellizzato mediante un grafo. In tale grafo i nodi saranno gestiti con numeri anziché con stringhe, per non appesantire la 
@@ -47,7 +47,9 @@ Si consideri il seguente esempio, dove a ciascun esame è assegnato anche un int
 
 ed il grafo associato sarà della forma:
 
-<img width="768" height="420" alt="image" src="https://github.com/user-attachments/assets/6f2ba970-5b6a-486a-bd74-cd2d3d241719" />
+<div align="center">
+  <img src="Immagini/Grafo_di_esempio.png" width="768" alt="Grafo degli esami e delle propedeuticità">
+</div>
 
 Con tale input, una possibile soluzione può essere: &nbsp; "5 6 0 2 1 3 4 7 8 9",  
 tuttavia anche &nbsp; "0 1 2 5 6 3 4 7 8 9" &nbsp; è una soluzione accettabile.  
@@ -70,7 +72,7 @@ La lista sarà un puntatore ad un nodo della lista stessa, e tale nodo sarà il 
 è utile per capire se in un ciclo for o while sia stata scandita tutta la lista (in effetti, se il puntatore al nodo successivo del nodo in esame è uguale al puntatore lista, allora ho scorso tutta la lista ed il nodo in esame è l'ultimo della linked list).
 <br>
 <div align="center">
-<img width="732" height="288" alt="Foto 4" src="https://github.com/user-attachments/assets/aa9b4092-d869-4632-9e6e-2bb584a71bef" />
+  <img src="Immagini/Linked_List.png" width="732" alt="Lista bidirezionale ciclica con sentinella">
 </div>
 <br>
 
@@ -89,17 +91,17 @@ del nodo k. Le liste forward star sono state implementate come linked list circo
 Rappresentativamente, il grafo apparirà come:  
 
 <div align="center">
-<img width="646" height="446" alt="Grafo FS drawio" src="https://github.com/user-attachments/assets/9fcf6d37-6b70-4a3e-b80a-2649b9db499e" />  
+  <img src="Immagini/Grafo_FS.png" width="646" alt="Grafo rappresentato mediante liste forward star">
 </div>
 
 Il vantaggio di rappresentare il grafo mediante liste forward stars, anziché tramite matrici di adiacenza, è il notevole risparmio di memoria allocata, in effetti,
 lo spazio necessario per allocare un grafo con liste FS è pari a $\Theta(n+m)$ tra costola e liste, mentre lo spazio necessario ad allocare
-un grafo mediante liste di adiacenza è di $\Theta(n^2)$, pertanto, eccezion fatta per il caso (molto atipico in questo contesto) di grafi densi dove $m \approx n^2$ ) il risparmio di spazio è considerevole poichè si abbatte da quadratico a lineare.  
+un grafo mediante matrici di adiacenza è di $\Theta(n^2)$, pertanto, eccezion fatta per il caso (molto atipico in questo contesto) di grafi densi dove $m \approx n^2$ ) il risparmio di spazio è considerevole poichè si abbatte da quadratico a lineare.  
 Lo svantaggio è tuttavia che il costo computazionale necessario per accedere
 all'arco $(v,w)$ è pari a $\Theta( \delta_{v}^{+} )$, dove $\delta_{v}^{+}$ indica il numero di archi uscenti dal nodo $v$.
 
 Tra le altre strutture dati utilizzate ci sono anche i vettori e le code di interi.  
-La coda di interi (int queue) è una classica coda i cui elementi sono nodi che possono contenere solo numeri interi, ed è stata per semplicità implementata mediante un vettore e due interi come indici posizione (che fungono quindi da "puntatori") denominati front e rear.  
+La coda di interi (int queue) è una classica coda i cui elementi sono nodi che possono contenere solo numeri interi, ed è stata per semplicità implementata mediante un vettore e due interi come indici posizione (che fungono quindi da "puntatori") denominati head e tail.  
 La coda di interi rispetta la gerarchia FIFO (first in first out) tipica di tutte le code.
 
 Sono state implementate anche delle funzioni di libreria, consultabili nei file:  
@@ -124,7 +126,7 @@ L'idea di fondo è la seguente: si inseriscono nel vettore `soluzione` ed anche 
 Al termine del processo, la cardinalità del vettore `soluzione` ci dirà se ci sia effettivamente una soluzione (cosa che accade se e solo se il vettore `soluzione` ospita tutti gli n nodi del grafo) oppure se il grafo presenta un ciclo (e quindi non ci sia effettivamente una soluzione).  
 
 La procedura appena descritta ha in realtà un nome ben preciso: trattasi dell'*algoritmo di Kahn* per *l'ordinamento topologico* di un grafo orientato. 
-Un ordinamento dei nodi di un grafo viene detto topologico quando l'ordinamento dei nodi rispetta la proprietà secondo la quale:  
+Un ordinamento dei nodi di un grafo orientato viene detto topologico quando l'ordinamento dei nodi rispetta la proprietà secondo la quale:  
 &nbsp; &nbsp; se esiste l'arco (v,w) allora il nodo v deve precedere il nodo w.
 
 
@@ -167,7 +169,7 @@ Per quanto riguarda la visita del grafo, lo pseudocodice è il seguente:
 
 cont_soluz = 0;  
 coda Q;  
-&emsp;         for k = 0, 1, ..., n  
+&emsp;         for k = 0, 1, ..., n-1  
 &emsp; &emsp; &emsp;     if( prerequisiti[k] = 0 )  
 &emsp; &emsp; &emsp; &emsp; &emsp;     Enqueue(k, Q);  
 &emsp; &emsp; &emsp; &emsp; &emsp;     soluzione[cont_soluz] = k;  
@@ -187,7 +189,7 @@ while( IsEmpty(Q) = false ){
 &emsp;         } // end ciclo for sulla FS di v  
 } // end while(coda vuota)  
 
-Per calcolare il costo computazionale di questa seconda parte di codice è essenziale notare che ciascun nodo entra nella coda Q una ed una sola volta,  
+Per calcolare il costo computazionale di questa seconda parte di codice è essenziale notare che ciascun nodo entra nella coda Q al più una volta,  
 pertanto, il costo computazionale di questa seconda parte di codice è:  
 
 $$
@@ -209,3 +211,5 @@ Di conseguenza, il costo computazionale totale per calcolare l'ordine degli esam
 $$
 Time(Course \textunderscore Schedule) = \Theta(n+m) + \Theta(n+m) = \Theta(n+m)
 $$
+
+
