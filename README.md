@@ -185,7 +185,7 @@ while( IsEmpty(Q) = false ){
 &emsp; &emsp; &emsp; &emsp; &emsp;     soluzione[cont_soluz] = w;  
 &emsp; &emsp; &emsp; &emsp; &emsp;     cont_soluz++;  
 &emsp; &emsp; &emsp; &emsp; &emsp;     Enqueue(w, Q);  
-&emsp; &emsp; &emsp;     }  // end if
+&emsp; &emsp; &emsp;     }  // end if  
 &emsp;         } // end ciclo for sulla FS di v  
 } // end while(coda vuota)  
 
