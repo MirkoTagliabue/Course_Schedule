@@ -112,7 +112,7 @@ Sono state implementate anche delle funzioni di libreria, consultabili nei file:
 
 ## Algoritmo di risoluzione
 
-Dopo aver letto l'input, interpretato il formato e caricato i dati in un grafo, l'algoritmo procede ad eseguire una prima lettura di tutto il grafo (andando ad eseguire un ciclo for sulla costola ed un ciclo annidato sulla lista FS, il tutto in tempo $\Theta(m)$, lineare nel numero di archi) e calcola per ciascun corso v quanti siano i suoi prerequisiti.  
+Dopo aver letto l'input, interpretato il formato e caricato i dati in un grafo, l'algoritmo procede ad eseguire una prima lettura di tutto il grafo (andando ad eseguire un ciclo for sulla costola ed un ciclo annidato sulla lista FS, il tutto in tempo lineare in $\Theta(n+m)$) e calcola per ciascun corso v quanti siano i suoi prerequisiti.  
 Per fare ciò si utilizza un vettore di interi chiamato `numero_di_prerequisiti`, esso è un vettore con la proprietà tale per cui `numero_di_prerequisiti[v]` indica il numero di esami che è necessario sostenere prima di poter sostenere l'esame v.  
 L'inizializzazione del vettore `numero_di_prerequisiti` avviene tramite un ciclo for sulla costola ed un ciclo for (annidato)
 sulle liste FS del nodo in esame, si accede pertanto a ciascuno degli $\delta_{v}^{+}$ archi della forma (v,w), si memorizza la destinazione w dell'arco, e si incrementa `numero_di_prerequisiti[w]` di 1.
@@ -132,7 +132,7 @@ Un ordinamento dei nodi di un grafo orientato viene detto topologico quando l'or
 
 ## Analisi dei costi computazionali
 
-Analizzeremo qui solo i costi computazionali del calcolo della soluzione, non saranno analizzati i costi computazionali per l'interpretazione dell'input ed il caricamento dell'input in un grafo (cosa che comunque avviene con un costo computazionale lineare in n+m) e non analizzeremo i costi computazionali per deallocare le strutture dati allocate dinamicamente come ad esempio il grafo (cosa che, ancora una volta, avviene linearmente).  
+Analizzeremo qui solo i costi computazionali del calcolo della soluzione, non saranno analizzati i costi computazionali per l'interpretazione dell'input ed il caricamento dell'input in un grafo (cosa che comunque avviene con un costo computazionale $O(n+m^2)$) e non analizzeremo i costi computazionali per deallocare le strutture dati allocate dinamicamente come ad esempio il grafo.  
 Sia $G:=(V,E)$ il grafo, con $n:=|V|, m:=|E|$.
 
 Per inizializzare il vettore dei prerequisiti, avviene che, in pseudocodice:  
